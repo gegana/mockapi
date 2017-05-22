@@ -1,0 +1,16 @@
+[
+  {
+    "path": "/product/:sku", // follows Express js route regexp
+    "method": "GET",
+    "status": 200, // status code will be returned
+    "body": {
+      "message": "Server received your request for sku {sku}" // supports tokenized fields from request URL param and querystring
+    },
+    "responseDelay": 5000 // ms
+  },
+  {
+    "path": "/product/:sku", // follows Express js route regexp
+    "method": "POST",
+    "status": 500 // bugs!!!
+  }
+]
