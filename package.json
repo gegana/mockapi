@@ -1,0 +1,32 @@
+{
+  "name": "mockapi",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "./node_modules/.bin/gulp run"
+  },
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-animate": "^1.6.4",
+    "angular-aria": "^1.6.4",
+    "angular-material": "^1.1.4",
+    "angular-messages": "^1.6.4",
+    "body-parser": "~1.15.2",
+    "browserify": "^14.3.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "get-parameter-names": "^0.3.0",
+    "gulp": "^3.9.1",
+    "hyperwatch": "^0.5.4",
+    "moment": "^2.18.1",
+    "mongodb": "^2.2.26",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0",
+    "twig": "~0.9.5",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "gulp-nodemon": "^2.2.1"
+  }
+}

@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+const Startup = require('../src/startup'),
+  Timestamp = require('../src/lib/timestamp'),
+  routes = []
+try {
+  routes = require('../routes.json')
+} catch (err) {}
+
+var startup = new Startup()
+startup.useServices({
+  // include service dependencies here
+}).boot(routes, process.env.PORT).then(() => {
+  console.log('[' + Timestamp() + '] Successfully booted application')
+}).catch((err) => {
+  console.log('[' + Timestamp() + '] Failed to boot application')
+  console.log('[' + Timestamp() + '] ' + err.stack)
+  process.exit(1)
+})

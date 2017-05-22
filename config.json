@@ -1,0 +1,8 @@
+{
+    "mongodb": {
+        "connectionString": "mongodb://localhost:27017"
+    },
+    "nodecache": {
+        "ttl": 10
+    }
+}
