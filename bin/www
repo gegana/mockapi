@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const Startup = require('../src/startup'),
-  Timestamp = require('../src/lib/timestamp'),
-  routes = []
+  Timestamp = require('../src/lib/timestamp')
+var routes = []
 try {
   routes = require('../routes.json')
 } catch (err) {}
