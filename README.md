@@ -51,6 +51,12 @@ overtime.
 With Mockapi, you can deploy it with your application as a stack, with specified routes.json file. And/or you can use the super friendly UI to
 manually add mock api endpoints. The UI comes with a console log stream, so that you can monitor incoming requests all in one place.
 
+![scale up](ui.png)
+
+Console log stream in the browser UI.
+
+![scale up](console.png)
+
 # How it works
 Built using express js, the mock api endpoints have 3 priority levels:
 1. Routes hard coded in the application
