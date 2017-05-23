@@ -1,9 +1,10 @@
 {
   "name": "mockapi",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
-    "start": "./node_modules/.bin/gulp run"
+    "start": "./node_modules/.bin/gulp run",
+    "release": "standard-version"
   },
   "dependencies": {
     "angular": "^1.6.4",
@@ -29,6 +30,7 @@
     "yargs": "^8.0.1"
   },
   "devDependencies": {
-    "gulp-nodemon": "^2.2.1"
+    "gulp-nodemon": "^2.2.1",
+    "standard-version": "^4.0.0"
   }
 }
