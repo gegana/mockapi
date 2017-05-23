@@ -1,7 +1,8 @@
 {
   "name": "mockapi",
   "version": "1.1.0",
-  "private": true,
+  "author": "Dylan Sumiskum",
+  "private": false,
   "scripts": {
     "start": "./node_modules/.bin/gulp run",
     "release": "standard-version"
