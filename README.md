@@ -1,6 +1,6 @@
-# mockapi
+# supermockapi
 [![Build Status](https://travis-ci.org/gegana/mockapi.svg?branch=master)](https://travis-ci.org/gegana/mockapi)
-[![This image on DockerHub](https://img.shields.io/docker/pulls/dsumiskum/mockapi.svg)](https://hub.docker.com/r/dsumiskum/mockapi/)
+[![This image on DockerHub](https://img.shields.io/docker/pulls/dsumiskum/supermockapi.svg)](https://hub.docker.com/r/dsumiskum/supermockapi/)
 
 A lightweight, user-friendly, and powerful tool for mocking API endpoints. Useful for testing API client integrations, or performance testing your application without sending traffic to your API dependencies.
 Has an external dependency to a mongo database.
@@ -8,20 +8,20 @@ Has an external dependency to a mongo database.
 # Running in Docker
 Runs in port 3000 by default.
 ```
-docker run --name mockapi -p 3000:3000 dsumiskum/mockapi
+docker run --name supermockapi -p 3000:3000 dsumiskum/supermockapi
 ```
 Configure a different port.
 ```
-docker run --name mockapi -p 3000:5000 -e "PORT:5000" dsumiskum/mockapi
+docker run --name supermockapi -p 3000:5000 -e "PORT:5000" dsumiskum/supermockapi
 ```
 Configure mongo connection string. By default it will connect to mongodb://localhost:27017.
 ```
-docker run --name mockapi -p 3000:3000 -e "MONGODB_CONNECTION_STRING:mongodb://mymongo:8081" dsumiskum/mockapi
+docker run --name supermockapi -p 3000:3000 -e "MONGODB_CONNECTION_STRING:mongodb://mymongo:8081" dsumiskum/supermockapi
 ```
 Specify initial mocked api routes specification through volume mapping a folder with a `routes.json` or the file itself to the container workdir (app is the workdir).
 The application will look for a routes.json file in the workdir when booting up.
 ```
-docker run --name mockapi -p 3000:3000 -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/mockapi
+docker run --name supermockapi -p 3000:3000 -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
 ```
 Route specifications format (routes.json):
 ```
@@ -45,14 +45,14 @@ Route specifications format (routes.json):
 If you only plan to use the mock api endpoints defined in your routes.json and nothing else, run the application in stateless mode to
 disable UI and storage features.
 ```
-docker run --name mockapi -p 3000:3000 -e "STATELESS=true" -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/mockapi
+docker run --name supermockapi -p 3000:3000 -e "STATELESS=true" -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
 ```
 # Features
-Mockapi is meant to be lightweight, easy to deploy, and works for your Continous Integration needs. A big problem with performance testing 
+supermockapi is meant to be lightweight, easy to deploy, and works for your Continous Integration needs. A big problem with performance testing 
 services is isolating the external dependencies to get more predictable metrics, which would be useful if you are benchmarking your metrics
 overtime.
 
-With Mockapi, you can deploy it with your application as a stack, with specified routes.json file. And/or you can use the super friendly UI to
+With supermockapi, you can deploy it with your application as a stack, with specified routes.json file. And/or you can use the super friendly UI to
 manually add mock api endpoints. The UI comes with a console log stream, so that you can monitor incoming requests all in one place.
 
 Features:
