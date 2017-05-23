@@ -1,6 +1,7 @@
 # supermockapi
 [![Build Status](https://travis-ci.org/gegana/mockapi.svg?branch=master)](https://travis-ci.org/gegana/mockapi)
 [![This image on DockerHub](https://img.shields.io/docker/pulls/dsumiskum/supermockapi.svg)](https://hub.docker.com/r/dsumiskum/supermockapi/)
+[![npm version](https://badge.fury.io/js/supermockapi.svg)](https://badge.fury.io/js/supermockapi)
 
 A lightweight, user-friendly, and powerful tool for mocking API endpoints. Useful for testing API client integrations, or performance testing your application without sending traffic to your API dependencies.
 Has an external dependency to a mongo database.
