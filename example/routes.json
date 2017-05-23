@@ -1,16 +1,25 @@
-[
-  {
-    "path": "/product/:sku", 
-    "method": "GET",
+[{
+    "path": "/product/:sku",
+    "method": "POST",
     "status": 200,
     "body": {
-      "message": "Server received your request for sku {sku}" 
+      "message": "Server received your request for sku {sku}"
     },
-    "responseDelay": 5000 
+    "responseDelay": 5000
   },
   {
-    "path": "/product/:sku", 
-    "method": "POST",
-    "status": 500 
+    "path": "/product/:sku",
+    "method": "GET",
+    "status": 200,
+    "conditionalBehaviors": [{
+      "condition": "{calls} > 10",
+      "status": 500,
+      "body": {
+        "message": "[Condition Triggered] Number of calls = {calls}"
+      }
+    }],
+    "body": {
+      "message": "Number of calls = {calls}"
+    }
   }
 ]

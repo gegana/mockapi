@@ -8,8 +8,12 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}\\bin\\www",
-            "args": []
+            "program": "${workspaceRoot}/bin/www",
+            "args": [
+                "-f",
+                "../example/routes.json",
+                "-s"
+            ]
         }
     ]
 }
