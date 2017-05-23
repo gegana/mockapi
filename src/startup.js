@@ -44,26 +44,30 @@ module.exports = class Startup {
    * Boot an express js application
    * @param {object} routes 
    * @param {string} port 
+   * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage
    */
-  async boot(routes, port) {
-    console.log('[' + Timestamp() + '] Booting application')
-    await this.initApp(routes)
+  async boot(routes, port, stateless) {
+    console.log('[' + Timestamp() + '] Booting ' + ((stateless) ? 'stateless' : 'stateful') +  ' application')
+    await this.initApp(routes, stateless)
     this.start(port)
   }
 
   /**
    * Construct an express js app with minimal configuration
-   * @param {object} routes 
+   * @param {object} routes
+   * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage 
    */
-  async initApp(routes) {
+  async initApp(routes, stateless) {
     console.log('[' + Timestamp() + '] Initializing express js application')
     this.app = require('express')()
     this.setView('twig')
       .setParsers()
       .setLogger()
-    await this.useMongoDb()
-    this.useNodeCache()
-      .setRoutes(routes)
+    if (!stateless) {
+      await this.useMongoDb()
+      this.useNodeCache()
+    }
+    this.setRoutes(routes, stateless)
     return this
   }
 
@@ -192,30 +196,33 @@ module.exports = class Startup {
   /**
    * Setup express js app HTTP routes
    * @param {object} routes 
+   * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage 
    */
-  setRoutes(routes) {
+  setRoutes(routes, stateless) {
     console.log('[' + Timestamp() + '] Setting express js routes')
     const globalErrorHandler = require('./middlewares/globalErrorHandler'),
       pageNotFoundHandler = require('./middlewares/pageNotFoundHandler')
 
-    // Handle static file requests to public folder
-    this.app.use(
-      require('express')
-      .static(require('path')
-        .join(__dirname, 'public')
+    if (!stateless) {
+      // Handle static file requests to public folder
+      this.app.use(
+        require('express')
+        .static(require('path')
+          .join(__dirname, 'public')
+        )
       )
-    )
 
-    // Setup app to use defined routes
-    for (let key in this.routes) {
-      let route = this.routes[key]
-      if (Array.isArray(route)) {
-        for (let key in route) {
-          var r = route[key]
-          this.__routeFactory.register(r.method, r.path, r.handler)
+      // Setup app to use defined routes
+      for (let key in this.routes) {
+        let route = this.routes[key]
+        if (Array.isArray(route)) {
+          for (let key in route) {
+            var r = route[key]
+            this.__routeFactory.register(r.method, r.path, r.handler)
+          }
+        } else {
+          this.__routeFactory.register(route.method, route.path, route.handler)
         }
-      } else {
-        this.__routeFactory.register(route.method, route.path, route.handler)
       }
     }
 

@@ -1,16 +1,21 @@
 #!/usr/bin/env node
 
 const Startup = require('../src/startup'),
-  Timestamp = require('../src/lib/timestamp')
+  Timestamp = require('../src/lib/timestamp'),
+  argv = require('yargs').argv,
+  routesPath = (argv.f || '../routes.json').replace(/\\/g, "/"),
+  stateless = ('s' in argv) ? argv.s : process.env.STATELESS
+
 var routes = []
 try {
-  routes = require('../routes.json')
+  routes = require(routesPath)
+  console.log('[' + Timestamp() + '] Found ' + routesPath)
 } catch (err) {}
 
 var startup = new Startup()
 startup.useServices({
   // include service dependencies here
-}).boot(routes, process.env.PORT).then(() => {
+}).boot(routes, process.env.PORT, stateless || false).then(() => {
   console.log('[' + Timestamp() + '] Successfully booted application')
 }).catch((err) => {
   console.log('[' + Timestamp() + '] Failed to boot application')

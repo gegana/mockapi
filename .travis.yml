@@ -1,17 +1,21 @@
 sudo: required
-
 language: node_js
-
+node_js:
+- '7'
 services:
-  - docker
-
+- docker
 before_install:
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
-  - docker build -t dsumiskum/mockapi .
-
+- sudo apt-get update
+- sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+- docker build -t dsumiskum/mockapi .
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push dsumiskum/mockapi;
-    fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  docker push dsumiskum/mockapi; fi
+deploy:
+  provider: npm
+  email: dylan.sumiskum@live.com
+  api_key:
+    secure: MqSzXjy+qfvECmPzgYQH2bx1jBq6rTuMQlRDvh/RGEDMMsZaize/1KFswzgORWV1vSok1KVG3vPm9ftfVIoIdGGj/Elg6vQoW3wD+XYv0ZLMcu7qAj9akBuJhHY5n430xEvPeKiluNUF8aMNsGkTkqFaiChf6Jy/Yeh+97Sj2b7Ug92KY3DLApf9Zjdr3ONEDZNo6FZekpYqNubAutdN4UAYyUK01vHEKl53lKwj9bxBy7viERzqQLb6sz1smNsaDgPDla6tvkbzj3RSRm8l8+wfshzLOLJpn1mCqRSyPS1Za6V2QIDkJ/gr2ZufvIYUmV0+u3jydXnzByrgCjsguNb5t0iJQ/lFgglDGPHlahhNa++Up+VFsX2g0XmNd09eiyX0Wtgw9oLRaytdb+MNtNUHlFAlpaPqUF08UJX5halEoHXFG0cy2ufQDy3C104odxLUtl1dbsdMMiVMFfyMEG/8C18QUbsHJ1eQp6hmCuTjkO/WZPhr4EdXWA1S4Efla5olNH3+u8fzZ07vE9b/ttjOs6y0MBCLft14qrKnNmUAAx4mACxHOwnBd34ZLKvj84+FIH7CJIDyOZsBk0mbrYVRkIhD7F9c/+q8irYLOEVo9hpeEgQokr7+TSU+gEMo9+ZxA6kNmX24GYZ8+9kuqcDTOUL/uAlbsWgX/MPmv0U=
+  on:
+    tags: true
+    repo: gegana/mockapi

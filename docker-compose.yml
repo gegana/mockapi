@@ -1,10 +1,12 @@
 web:
-  build: .
+  image: dsumiskum/mockapi
   links:
     - mongo
   ports:
     - "3000:3000"
   environment:
     - MONGODB_CONNECTION_STRING=mongodb://mongo:27017
+  volumes:
+    - ./example/routes.json:/app/routes.json
 mongo:
   image: mongo

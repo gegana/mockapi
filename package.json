@@ -25,7 +25,8 @@
     "node-cache": "^4.1.1",
     "serve-favicon": "~2.3.0",
     "twig": "~0.9.5",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
     "gulp-nodemon": "^2.2.1"

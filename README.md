@@ -5,7 +5,7 @@
 A lightweight, user-friendly, and powerful tool for mocking API endpoints. Useful for testing API client integrations, or performance testing your application without sending traffic to your API dependencies.
 Has an external dependency to a mongo database.
 
-# Running
+# Running in Docker
 Runs in port 3000 by default.
 ```
 docker run --name mockapi -p 3000:3000 dsumiskum/mockapi
@@ -50,12 +50,6 @@ overtime.
 
 With Mockapi, you can deploy it with your application as a stack, with specified routes.json file. And/or you can use the super friendly UI to
 manually add mock api endpoints. The UI comes with a console log stream, so that you can monitor incoming requests all in one place.
-
-![scale up](ui.png)
-
-Console log stream in the browser UI.
-
-![scale up](console.png)
 
 # How it works
 Built using express js, the mock api endpoints have 3 priority levels:
