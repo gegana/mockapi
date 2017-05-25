@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/gegana/supermockapi/compare/v1.1.5...v1.2.0) (2017-05-25)
+
+
+### Features
+
+* Conditional behaviors support. Tokens now include calls, random, timestamp, and req body. Updated UI to support conditional behaviors. ([dc0ea9e](https://github.com/gegana/supermockapi/commit/dc0ea9e))
+
+
+
 <a name="1.1.5"></a>
 ## [1.1.5](https://github.com/gegana/supermockapi/compare/v1.1.4...v1.1.5) (2017-05-23)
 
