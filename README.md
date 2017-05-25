@@ -8,44 +8,44 @@ Has an external dependency to a mongo database.
 
 # Running in Docker
 Runs in port 3000 by default.
-```
+```shell
 docker run --name supermockapi -p 3000:3000 dsumiskum/supermockapi
 ```
 Configure a different port.
-```
+```shell
 docker run --name supermockapi -p 3000:5000 -e "PORT:5000" dsumiskum/supermockapi
 ```
 Configure mongo connection string. By default it will connect to mongodb://localhost:27017.
-```
+```shell
 docker run --name supermockapi -p 3000:3000 -e "MONGODB_CONNECTION_STRING:mongodb://mymongo:8081" dsumiskum/supermockapi
 ```
 Specify initial mocked api routes specification through volume mapping a folder with a `routes.json` or the file itself to the container workdir (app is the workdir).
 The application will look for a routes.json file in the workdir when booting up.
-```
+```shell
 docker run --name supermockapi -p 3000:3000 -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
 ```
 Route specifications format (routes.json):
-```
+```json
 [
   {
-    "path": "/product/:sku", // follows Express js route regexp
+    "path": "/product/:sku", 
     "method": "GET",
-    "status": 200, // status code will be returned
+    "status": 200, 
     "body": {
-      "message": "Server received your request for sku {sku}" // supports tokenized fields from request URL param and querystring
+      "message": "Server received your request for sku {sku}" 
     },
-    "responseDelay": 5000 // ms
+    "responseDelay": 5000 
   },
   {
-    "path": "/product/:sku", // follows Express js route regexp
+    "path": "/product/:sku", 
     "method": "POST",
-    "status": 500 // bugs!!!
+    "status": 500
   }
 ]
 ```
 If you only plan to use the mock api endpoints defined in your routes.json and nothing else, run the application in stateless mode to
 disable UI and storage features.
-```
+```shell
 docker run --name supermockapi -p 3000:3000 -e "STATELESS=true" -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
 ```
 # Features
@@ -58,7 +58,7 @@ manually add mock api endpoints. The UI comes with a console log stream, so that
 
 ## Create mocked API endpoints using Express JS pattern matching
 You can do this via the UI or by configuring a routes.json file. Json file example where you take a parameter sku in the base path:
-```
+```json
 {
   "path": "/product/:sku"
 }
@@ -66,7 +66,7 @@ You can do this via the UI or by configuring a routes.json file. Json file examp
 
 ## Specify default response code
 You can do this via the UI or by configuring a routes.json file. Json file example for returning a 200:
-```
+```json
 {
   "path": "/product/:sku",
   "status": 200
@@ -75,15 +75,17 @@ You can do this via the UI or by configuring a routes.json file. Json file examp
 
 ## Specify default response body in json
 You can do this via the UI or by configuring a routes.json file. Json file example for returning a simple message:
-```
+```json
 {
   "path": "/product/:sku",
   "status": 200,
-  "body": {"Hello world!"}
+  "body": {
+    "message": "Hello world!"
+  }
 }
 ```
 You can include values from the tokens bag in your response body. The syntax for this is `{token}`.
-```
+```json
 {
   "path": "/product/:sku",
   "status": 200,
@@ -102,7 +104,7 @@ What is included in tokens:
 
 ## Simulate response delay
 You can do this via the UI or by configuring a routes.json file. Json file example for delaying response by 5 seconds:
-```
+```json
 {
   "responseDelay": 5000
 }
@@ -110,7 +112,7 @@ You can do this via the UI or by configuring a routes.json file. Json file examp
 
 ## Specify conditional behaviors
 You can do this via the UI or by configuring a routes.json file. Json file example of a weighted response scenario using conditional behaviors:
-```
+```json
 {
     "path": "/random",
     "method": "GET",

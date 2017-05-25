@@ -20,11 +20,10 @@ module.exports = class RouteHandler {
 
             merge(tokens, params)
             merge(tokens, query)
-
+            merge(tokens, flattenObject(req.body), 'body.')
             tokens.calls = this.__processPageViews(req)
             tokens.random = getRandomIntInclusive(1, 100)
             tokens.timestamp = Date.now()
-            tokens.body = req.body
 
             var status = this.__route.status,
                 body = this.__processBodyTokens(this.__route.body, tokens)
@@ -115,10 +114,11 @@ function timeout(ms) {
  * Merge properties from src to obj
  * @param {object} obj 
  * @param {object} src 
+ * @param {string} prependKey
  */
-function merge(obj, src) {
+function merge(obj, src, prependKey = '') {
     for (let k in src) {
-        obj[k] = src[k]
+        obj[prependKey + k] = src[k]
     }
 }
 
@@ -144,4 +144,25 @@ function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Flattens an object into single-depth
+ * @param {object} ob 
+ */
+function flattenObject(ob) {
+    var toReturn = {}
+    for (var i in ob) {
+        if (!ob.hasOwnProperty(i)) continue
+        if ((typeof ob[i]) == 'object') {
+            var flatObject = flattenObject(ob[i])
+            for (var x in flatObject) {
+                if (!flatObject.hasOwnProperty(x)) continue
+                toReturn[i + '.' + x] = flatObject[x]
+            }
+        } else {
+            toReturn[i] = ob[i]
+        }
+    }
+    return toReturn
 }
