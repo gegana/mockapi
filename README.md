@@ -56,14 +56,91 @@ overtime.
 With supermockapi, you can deploy it with your application as a stack, with specified routes.json file. And/or you can use the super friendly UI to
 manually add mock api endpoints. The UI comes with a console log stream, so that you can monitor incoming requests all in one place.
 
-Features:
-1. Create mocked API endpoints using Express JS pattern matching.
-2. Specify default response code to return.
-3. Specify default response body to return in json format.
-4. Include values from the url parameter or querystring in the response body using pattern replacement. Ex. { "Hello {id}" }.
-5. Simulate response delay.
-6. Run in stateless mode passing pre-defined mocked API endpoints for your automated tests.
-7. Run in stateful mode to manage mocked API endpoints via the web UI, and monitor traffic via a console stream embeded in the web UI.
+## Create mocked API endpoints using Express JS pattern matching
+You can do this via the UI or by configuring a routes.json file. Json file example where you take a parameter sku in the base path:
+```
+{
+  "path": "/product/:sku"
+}
+```
+
+## Specify default response code
+You can do this via the UI or by configuring a routes.json file. Json file example for returning a 200:
+```
+{
+  "path": "/product/:sku",
+  "status": 200
+}
+```
+
+## Specify default response body in json
+You can do this via the UI or by configuring a routes.json file. Json file example for returning a simple message:
+```
+{"Hello world!"}
+```
+You can include values from the tokens bag in your response body. The syntax for this is `{token}`.
+```
+{
+  "sku":"{sku}"
+}
+```
+What is included in tokens:
+1. Any parameters in the base URL
+2. Any parameters in the querystring
+3. The request body `{body}`
+4. The number of calls made to the base URL `{calls}`
+5. A random number between 1 and 100 `{random}`
+6. The current timestamp `{timestamp}`
+
+## Simulate response delay
+You can do this via the UI or by configuring a routes.json file. Json file example for delaying response by 5 seconds:
+```
+{
+  "responseDelay": 5000
+}
+```
+
+## Specify conditional behaviors
+You can do this via the UI or by configuring a routes.json file. Json file example of a weighted response scenario using conditional behaviors:
+```
+{
+    "path": "/random",
+    "method": "GET",
+    "status": 200,
+    "conditionalBehaviors": [{
+        "condition": "{random} <= 30",
+        "status": 500,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 60",
+        "status": 404,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 90",
+        "status": 200,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 100",
+        "status": 206,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      }
+    ],
+    "body": {
+      "message": "Number of calls = {calls}"
+    }
+  }
+```
 
 # How it works
 Built using express js, the mock api endpoints have 3 priority levels:
@@ -71,8 +148,8 @@ Built using express js, the mock api endpoints have 3 priority levels:
 2. Routes you inject via routes.json
 3. Routes added dynamically via the API (/mockapi/route) that the UI uses
 
-So if you specified endpoint configurations in routes.json, you will not be able to override it via the UI, and the UI will not be able to see it.
-Those configurations are in memory.
+The routes.json configurations are in memory, while the routes added dynamically via the UI are stored in mongodb.
+When you create routes.json file, make sure to include the required fields: path, method, and status.
 
 # Contributing
 If you want to contribute, the application is fairly standard node js app albeit it is using 7.0 features for async/await operators. So you will need:

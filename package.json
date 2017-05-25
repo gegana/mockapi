@@ -1,6 +1,7 @@
 {
   "name": "supermockapi",
   "version": "1.1.5",
+  "description": "A lightweight, user-friendly, and powerful tool for mocking API endpoints.",
   "author": "Dylan Sumiskum <dylan.sumiskum@live.com>",
   "private": false,
   "license": "MIT",
@@ -30,6 +31,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.14.0",
+    "express-session": "^1.15.3",
     "get-parameter-names": "^0.3.0",
     "gulp": "^3.9.1",
     "hyperwatch": "^0.5.4",

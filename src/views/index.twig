@@ -4,134 +4,172 @@
 <div ng-controller='FormController as controller'
      layout='row'
      layout-gt-small='column'
-     ng-cloak>
-  <div flex>
-    <md-toolbar layout="row" 
-                class="md-hue-3">
-      <div class="md-toolbar-tools">
-        <span>Routes</span>
+     ng-cloak
+     style='font-size: 14px'>
+  <form name='routeForm'
+        ng-cloak
+        flex
+        layout-padding>
+    <div>
+      <md-card>
+        <md-card-content>
+          <p><b>Use express js path regex format. Do not include querystrings, it is currently not supported. Example <span md-colors="{color: 'red-A100', 'border-color': 'primary-600'}">/product/:sku</span></b>.</p>
+        </md-card-content>
+      </md-card>
+      <div layout='row'>
+        <md-input-container class="md-block" 
+                            flex='60'>
+          <label>Path</label>
+          <input ng-model='route.path' 
+                 required
+                 name='path'>
+        </md-input-container>
+        <md-input-container class="md-block"
+                            flex='40'>
+          <label>Response status</label>
+          <md-select ng-model='route.status' 
+                     required
+                     name='status'>
+            <md-option ng-repeat='httpStatusCode in httpStatusCodes' value='{[{httpStatusCode.code}]}'>
+              {[{httpStatusCode.code}]} - {[{httpStatusCode.description}]} 
+            </md-option>
+          </md-select>
+        </md-input-container>
       </div>
-    </md-toolbar>
-    <md-content>
-      <md-list class="md-dense" 
-               flex>
-        <md-subheader class="md-no-sticky">Routes ordered by newest. Click to remove.</md-subheader>
-        <md-list-item class="md-3-line" 
-                      ng-repeat="route in routes" 
-                      ng-click="remove(route)">
-          <i class="material-icons"
-             style="margin: 8px">
-            link
-          </i>
-          <div class="md-list-item-text" 
-               layout="column">
-            <h3>{[{route.method}]} {[{route.path}]}</h3>
-            <h4>{[{route.status}]}</h4>
-            <p>{[{route._id}]}</p>
-            <p>{[{route.body}]}</p>
-          </div>
-        </md-list-item>
-      </md-list>
-    </md-content>
-  </div>
-  <div flex>
-    <form layout='column'
-          name='routeForm'
-          ng-cloak
-          class='md-inline-form'
-          flex>
-      <md-toolbar layout="row" 
-                  class="md-hue-3">
-        <div class="md-toolbar-tools">
-          <span>New Route</span>
+      <md-radio-group ng-model="route.method"
+                      ng-required="true">
+        <md-radio-button ng-repeat='verb in httpVerbs' 
+                         value='{[{verb}]}'
+                         required>
+          {[{verb}]}
+        </md-radio-button>
+      </md-radio-group>
+      <md-content layout-gt-sm='row'>
+        <md-input-container class="md-block"
+                            flex='90'>
+          <label>Response delay (ms)</label>
+          <input type='number' min='0' ng-model='route.responseDelay'>
+        </md-input-container>
+      </md-content>
+      <md-card>
+        <md-card-content>
+          <p><b>Response body must be <span md-colors="{color: 'red-A100', 'border-color': 'primary-600'}">json</span>. You can include tokens within curly braces <code>{sku}</code>.
+            Currently supported tokens:</b>
+            <ol> 
+              <li>Any parameters in the URL path such as <code>:sku</code></li>
+              <li>Any parameters in the querystring</li>
+              <li>The body <code>{body}</code> or to get properties in the body <code>{body.sku}</code></li>
+              <li>The number of calls <code>{calls}</code></li>
+              <li>A random number between 1 to 100 <code>{random}</code></li>
+              <li>The current timestamp <code>{timestamp}</code></li>
+            </ol>
+          </p>
+        </md-card-content>
+      </md-card>
+      <md-content layout-gt-sm='row'>
+        <md-input-container class="md-block"
+                            flex='90'>
+          <label>Response body</label>
+          <textarea ng-model="route.body" 
+                    rows="3" 
+                    md-select-on-focus>
+          </textarea>
+        </md-input-container>
+      </md-content>
+    </div>
+    <div layout='row'
+         layout-align='end center'>
+      <md-card flex>
+        <md-card-content>
+          <p><b>Conditonal behaviors - write conditions in javascript syntax. You can leverage the same tokens as in the body response.</b></p>
+        </md-card-content>
+      </md-card>
+      <md-button class="md-fab md-mini" 
+                 aria-label="Add"
+                 ng-click="addConditionalBehavior()">
+        <md-icon><i class="material-icons">add</i></md-icon>
+      </md-button>
+    </div>
+    <md-card ng-repeat="conditionalBehavior in route.conditionalBehaviors">
+      <div layout='row'>
+        <md-input-container class="md-block" 
+                            flex="40">
+          <label>Condition</label>
+          <input ng-model='conditionalBehavior.condition'
+                required>
+        </md-input-container>
+        <md-input-container class="md-block" 
+                            flex="30">
+          <label>Response status</label>
+          <md-select ng-model='conditionalBehavior.status' 
+                    required>
+            <md-option ng-repeat='httpStatusCode in httpStatusCodes' value='{[{httpStatusCode.code}]}'>
+              {[{httpStatusCode.code}]} - {[{httpStatusCode.description}]} 
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block"
+                            flex="30">
+          <label>Response delay (ms)</label>
+          <input type='number' min='0' ng-model='conditionalBehavior.responseDelay'>
+        </md-input-container>
+      </div>
+      <md-input-container class="md-block">
+        <label>Response body</label>
+        <textarea ng-model="conditionalBehavior.body" 
+                  rows="3" 
+                  md-select-on-focus>
+        </textarea>
+      </md-input-container>
+      <div layout="row"
+           layout-align="end end">
+        <div>
+          <md-icon style="cursor: pointer;" ng-click="removeConditionalBehavior($index)"><i class="material-icons">delete</i></md-icon>
         </div>
-      </md-toolbar>
-      <fieldset class="standard"
-                style='font-size: 12px'>
-        <legend>Required fields</legend>
-        <md-card>
-          <md-card-content>
-            <p>Use express js path regex format. Example <b>/product/:sku</b></p>
-          </md-card-content>
-        </md-card>
-        <md-content layout-gt-sm='row'>
-          <md-input-container class="md-block" 
-                              flex='90'>
-            <label>Path</label>
-            <input ng-model='route.path' 
-                   required
-                   name='path'>
-          </md-input-container>
-        </md-content>
-        <md-content layout-gt-sm='row'>
-          <md-input-container class="md-block"
-                              flex='30'>
-            <label>Method</label>
-            <md-select ng-model='route.method' 
-                       required
-                       name='method'>
-              <md-option ng-repeat='verb in httpVerbs' 
-                         value='{[{verb}]}'>
-                {[{verb}]}
-              </md-option>
-            </md-select>
-          </md-input-container>
-          <md-input-container class="md-block"
-                              flex='30'>
-            <label>Response status</label>
-            <md-select ng-model='route.status' 
-                       required
-                       name='status'>
-              <md-option ng-repeat='httpStatusCode in httpStatusCodes' value='{[{httpStatusCode.code}]}'>
-                {[{httpStatusCode.code}]} - {[{httpStatusCode.description}]} 
-              </md-option>
-            </md-select>
-          </md-input-container>
-        </md-content>
-      </fieldset>
-      <fieldset class="standard"
-                style='font-size: 12px'>
-        <legend>Optional</legend>
-        <md-content layout-gt-sm='row'>
-          <md-input-container class="md-block"
-                              flex='90'>
-            <label>Response delay (ms)</label>
-            <input type='number' min='0' ng-model='route.responseDelay'>
-          </md-input-container>
-        </md-content>
-        <md-card>
-          <md-card-content>
-            <p><b>application/json</b> or text content type</p>
-          </md-card-content>
-        </md-card>
-        <md-content layout-gt-sm='row'>
-          <md-input-container class="md-block"
-                              flex='90'>
-            <label>Response body</label>
-            <textarea ng-model="route.body" 
-                      rows="2" 
-                      md-select-on-focus>
-            </textarea>
-          </md-input-container>
-        </md-content>
-      </fieldset>
-      <div layout='row'
-           layout-align='start center'>
-        <md-button class="md-fab md-primary" 
-                   aria-label="Send"
-                   ng-click="send(route)">
-          <md-icon><i class="material-icons">send</i></md-icon>
-        </md-button>
-        <p ng-if="sendClicked && !routeForm.$valid"
-           style="color: red; font-size: 12px">
-           Please make sure you entered all required fields.
-        </p>
-        <p ng-if="jsonParseError"
-           style="color: red; font-size: 12px">
-           Incorrect json format in response body.
-        </p>
       </div>
-    </form>
+    </md-card>
+    <div layout='row'
+          layout-align='start center'>
+      <md-button class="md-fab" 
+                 aria-label="Send"
+                 ng-click="send(route)">
+        <md-icon><i class="material-icons">cloud_upload</i></md-icon>
+      </md-button>
+      <p ng-if="sendClicked && !routeForm.$valid"
+         md-colors="{color: 'red-A100', 'border-color': 'primary-600'}">
+          Please make sure you entered all required fields.
+      </p>
+      <p ng-if="jsonParseError"
+         md-colors="{color: 'red-A100', 'border-color': 'primary-600'}">
+          Incorrect json format in response body.
+      </p>
+    </div>
+  </form>
+  <div flex>
+    <md-list class="md-dense" 
+             flex>
+      <md-card>
+        <md-card-content>
+          <p><b>Routes ordered by newest. Click to remove.</b></p>
+        </md-card-content>
+      </md-card>
+      <md-list-item class="md-3-line" 
+                    ng-repeat="route in routes" 
+                    ng-click="remove(route)">
+        <i class="material-icons"
+            style="margin: 8px">
+          link
+        </i>
+        <div class="md-list-item-text" 
+             layout="column">
+          <h3><span md-colors="{color: 'grey', 'border-color': 'primary-600'}">{[{route.method}]}</span> <span md-colors="{color: 'red-A100', 'border-color': 'primary-600'}">{[{route.path}]}</span></h3>
+          <h4 md-colors="{color: 'green-A100', 'border-color': 'primary-600'}">{[{route.status}]}</h4>
+          <p>{[{route._id}]}</p>
+          <p>{[{route.body}]}</p>
+          <p>{[{route.conditionalBehaviors}]}</p>
+        </div>
+      </md-list-item>
+    </md-list>
   </div>
 </div>
 {% endblock %}

@@ -11,8 +11,7 @@
             "program": "${workspaceRoot}/bin/www",
             "args": [
                 "-f",
-                "../example/routes.json",
-                "-s"
+                "../example/routes.json"
             ]
         }
     ]

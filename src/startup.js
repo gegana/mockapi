@@ -3,7 +3,8 @@
 const Timestamp = require('./lib/timestamp'),
   RouteFactory = require('./routeFactory'),
   RouteHandler = require('./services/routeHandler'),
-  Hyperwatch = require('hyperwatch')
+  Hyperwatch = require('hyperwatch'),
+  Session = require('express-session')
 
 /**
  * Bootstrap express js application
@@ -63,6 +64,7 @@ module.exports = class Startup {
     this.setView('twig')
       .setParsers()
       .setLogger()
+      .useSession()
     if (!stateless) {
       await this.useMongoDb()
       this.useNodeCache()
@@ -162,6 +164,18 @@ module.exports = class Startup {
     }))
     this.app.use(cookieParser())
 
+    return this
+  }
+
+  /**
+   * Setup express js to use session - can be accessed from req.session
+   */
+  useSession() {
+    this.app.use(Session({
+      secret: 'moistened weasels',
+      resave: false,
+      saveUninitialized: true
+    }))
     return this
   }
 

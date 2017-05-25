@@ -2,6 +2,8 @@ module.exports = [
     '$scope',
     '$http',
     function ($scope, $http) {
+        $scope.route = {}
+        $scope.route.conditionalBehaviors = []
         $scope.httpVerbs = [
             'GET',
             'POST',
@@ -298,16 +300,36 @@ module.exports = [
                 })
             })
         }
+        $scope.addConditionalBehavior = () => {
+            $scope.route.conditionalBehaviors.push({})
+            $scope.$apply
+        }
+        $scope.removeConditionalBehavior = (index) => {
+            $scope.route.conditionalBehaviors.splice(index, 1)
+            $scope.$apply
+        }
         $scope.send = (route) => {
             $scope.sendClicked = true
+            var parsedRoute = Object.assign({}, route)
             if ($scope.routeForm.$valid) {
-                if (route.body) {
+                if (parsedRoute.body) {
                     try {
-                        route.body = JSON.parse(route.body)
+                        parsedRoute.body = JSON.parse(parsedRoute.body)
                         $scope.jsonParseError = false
                     } catch (err) {
                         $scope.jsonParseError = true
                         return
+                    }
+                }
+                for (var key in parsedRoute.conditionalBehaviors) {
+                    if (parsedRoute.conditionalBehaviors[key].body) {
+                        try {
+                            parsedRoute.conditionalBehaviors[key].body = JSON.parse(parsedRoute.conditionalBehaviors[key].body)
+                            $scope.jsonParseError = false
+                        } catch (err) {
+                            $scope.jsonParseError = true
+                            return
+                        }
                     }
                 }
                 $http({
@@ -316,13 +338,15 @@ module.exports = [
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    data: route
+                    data: parsedRoute
                 }).then(function (response) {
                     $http.get('/mockapi/route').then(function (response) {
                         $scope.routes = response.data
                         $scope.$apply
                     })
-                    $scope.route = {}
+                    $scope.route = {
+                        conditionalBehaviors: []
+                    }
                     $scope.routeForm.$setUntouched()
                     $scope.routeForm.$setPristine()
                     $scope.sendClicked = false

@@ -16,8 +16,46 @@
       "status": 500,
       "body": {
         "message": "[Condition Triggered] Number of calls = {calls}"
-      }
+      },
+      "responseDelay": 5000
     }],
+    "body": {
+      "message": "Number of calls = {calls}"
+    }
+  },
+  {
+    "path": "/random",
+    "method": "GET",
+    "status": 200,
+    "conditionalBehaviors": [{
+        "condition": "{random} <= 30",
+        "status": 500,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 60",
+        "status": 404,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 90",
+        "status": 200,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      },
+      {
+        "condition": "{random} <= 100",
+        "status": 206,
+        "body": {
+          "message": "[Condition Triggered] Random = {random}"
+        }
+      }
+    ],
     "body": {
       "message": "Number of calls = {calls}"
     }

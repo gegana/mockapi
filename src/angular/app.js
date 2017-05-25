@@ -6,13 +6,15 @@ const angular = require('angular'),
     formController = require('./formController'),
     hyperwatch = require('hyperwatch')({
         mini: {
-            position: 'bottom left',
+            position: 'top right',
             size: '100x100',
             fontSize: 3
         }
     })
-
-var app = angular.module('mockapi', ['ngMaterial'])
+/**
+ * Initialize angular application
+ */
+var app = angular.module('supermockapi', ['ngMaterial'])
     .config(function ($interpolateProvider) {
         $interpolateProvider.startSymbol('{[{').endSymbol('}]}')
     })
@@ -23,3 +25,18 @@ var app = angular.module('mockapi', ['ngMaterial'])
             .dark()
     })
     .controller('FormController', formController)
+/**
+ * Enable tabs in textareas
+ */
+var textareas = document.getElementsByTagName('textarea');
+var count = textareas.length;
+for (var i = 0; i < count; i++) {
+    textareas[i].onkeydown = function (e) {
+        if (e.keyCode == 9 || e.which == 9) {
+            e.preventDefault();
+            var s = this.selectionStart;
+            this.value = this.value.substring(0, this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+            this.selectionEnd = s + 1;
+        }
+    }
+}

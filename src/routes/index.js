@@ -5,7 +5,7 @@ module.exports = {
   path: '/',
   handler: function (req, res, next, mongodb) {
     res.render('index', {
-      title: 'Mockapi v' + version
+      title: 'Supermockapi v' + version
     })
   }
 }
