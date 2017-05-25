@@ -76,12 +76,20 @@ You can do this via the UI or by configuring a routes.json file. Json file examp
 ## Specify default response body in json
 You can do this via the UI or by configuring a routes.json file. Json file example for returning a simple message:
 ```
-{"Hello world!"}
+{
+  "path": "/product/:sku",
+  "status": 200,
+  "body": {"Hello world!"}
+}
 ```
 You can include values from the tokens bag in your response body. The syntax for this is `{token}`.
 ```
 {
-  "sku":"{sku}"
+  "path": "/product/:sku",
+  "status": 200,
+  "body": {
+    "sku": "{sku}"
+  }
 }
 ```
 What is included in tokens:
