@@ -1,5 +1,5 @@
 # supermockapi
-[![Build Status](https://travis-ci.org/gegana/mockapi.svg?branch=master)](https://travis-ci.org/gegana/mockapi)
+[![Build Status](https://travis-ci.org/gegana/supermockapi.svg?branch=master)](https://travis-ci.org/gegana/supermockapi)
 [![This image on DockerHub](https://img.shields.io/docker/pulls/dsumiskum/supermockapi.svg)](https://hub.docker.com/r/dsumiskum/supermockapi/)
 [![npm version](https://badge.fury.io/js/supermockapi.svg)](https://badge.fury.io/js/supermockapi)
 
