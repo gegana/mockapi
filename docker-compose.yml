@@ -1,5 +1,5 @@
 web:
-  image: dsumiskum/supermockapi
+  build: .
   links:
     - mongo
   ports:

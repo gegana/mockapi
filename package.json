@@ -27,25 +27,24 @@
     "angular-material": "^1.1.4",
     "angular-messages": "^1.6.4",
     "body-parser": "~1.15.2",
-    "browserify": "^14.3.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.14.0",
     "express-session": "^1.15.3",
     "get-parameter-names": "^0.3.0",
-    "gulp": "^3.9.1",
     "hyperwatch": "^0.5.4",
     "moment": "^2.18.1",
     "mongodb": "^2.2.26",
     "morgan": "~1.7.0",
     "node-cache": "^4.1.1",
-    "serve-favicon": "~2.3.0",
     "twig": "~0.9.5",
-    "vinyl-source-stream": "^1.1.0",
     "yargs": "^8.0.1"
   },
   "devDependencies": {
     "gulp-nodemon": "^2.2.1",
-    "standard-version": "^4.0.0"
+    "standard-version": "^4.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "gulp": "^3.9.1",
+    "browserify": "^14.3.0"
   }
 }

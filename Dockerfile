@@ -1,7 +1,7 @@
-FROM node:7.10
+FROM node:7.10-alpine
 
 COPY . /app
 WORKDIR /app
 
-RUN npm install
+RUN npm install --only=production
 CMD [ "npm", "start" ]
