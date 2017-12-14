@@ -1,15 +1,10 @@
 const RouteHandler = require('../services/routeHandler'),
     PathToRegexp = require('path-to-regexp'),
-    ObjectId = require('mongodb').ObjectID,
-    util = require('util'),
-    cache_key_format_paths = '$paths_%s',
-    cache_key_format_route = '$route_%s'
+    util = require('util')
 
 module.exports = class GatewayHandler {
-    constructor(memorycache, mongodb) {
-        this.__cache = memorycache
-        this.__db = mongodb
-        this.__collection = this.__db.collection('routes')
+    constructor(routeRepository) {
+        this.__routeRepository = routeRepository
     }
 
     /**
@@ -19,14 +14,14 @@ module.exports = class GatewayHandler {
      * @param {object} next - Express js middleware next object.
      */
     async processRequest(req, res, next) {
-        var paths = await this.__getRoutePaths(req.method)
-        if (!paths || paths.length == 0) {
+        var routes = this.__getRoutes(req.method)
+        if (!routes || routes.length == 0) {
             next()
         } else {
-            for (let i in paths) {
-                var path = paths[i]
+            for (let i in routes) {
+                var route = routes[i]
                 var regex_keys = []
-                var regex = PathToRegexp(path.path, regex_keys)
+                var regex = PathToRegexp(route.path, regex_keys)
                 var regex_result = regex.exec(req.baseUrl)
                 if (regex_result) {
                     regex_result.splice(0, 1)
@@ -36,7 +31,7 @@ module.exports = class GatewayHandler {
                             v = regex_result[i]
                         params[k.name] = v
                     }
-                    var route = await this.__getRoute(path._id)
+                    var route = this.__getRoute(route._id)
                     var h = new RouteHandler(route)
                     await h.processRequest(req, res, next, params)
                     return true
@@ -47,38 +42,18 @@ module.exports = class GatewayHandler {
     }
 
     /**
-     * Return an array of route paths for a particular http verb.
+     * Return an array of routes for a particular http verb.
      * @param {string} httpVerb - Ex. GET, POST, PUT, DELETE.
      */
-    async __getRoutePaths(httpVerb) {
-        const cacheKey = util.format(cache_key_format_paths, httpVerb)
-        var routes = this.__cache.get(cacheKey)
-        if (!routes) {
-            routes = await this.__collection.find({
-                method: httpVerb
-            }, {
-                path: 1
-            }).sort({
-                timestamp: -1
-            }).toArray()
-            this.__cache.set(cacheKey, routes)
-        }
-        return routes
+    __getRoutes(httpVerb) {
+        return this.__routeRepository.getRoutes(httpVerb)
     }
 
     /**
      * Get a route document by its id.
      * @param {string} id - mongodb document id of the route.
      */
-    async __getRoute(id) {
-        const cacheKey = util.format(cache_key_format_route, id)
-        var route = this.__cache.get(cacheKey)
-        if (!route) {
-            route = await this.__collection.findOne({
-                '_id': new ObjectId(id)
-            })
-            this.__cache.set(cacheKey, route)
-        }
-        return route
+    __getRoute(id) {
+        return this.__routeRepository.getRoute(id)
     }
 }

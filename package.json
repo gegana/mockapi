@@ -32,11 +32,11 @@
     "express": "~4.14.0",
     "express-session": "^1.15.3",
     "get-parameter-names": "^0.3.0",
+    "guid": "0.0.12",
     "hyperwatch": "^0.5.4",
+    "lokijs": "^1.5.1",
     "moment": "^2.18.1",
-    "mongodb": "^2.2.26",
     "morgan": "~1.7.0",
-    "node-cache": "^4.1.1",
     "twig": "~0.9.5",
     "yargs": "^8.0.1"
   },

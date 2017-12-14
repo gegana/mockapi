@@ -4,7 +4,8 @@ const Timestamp = require('./lib/timestamp'),
   RouteFactory = require('./routeFactory'),
   RouteHandler = require('./services/routeHandler'),
   Hyperwatch = require('hyperwatch'),
-  Session = require('express-session')
+  Session = require('express-session'),
+  RouteRepository = require('./data/routeRepository')
 
 /**
  * Bootstrap express js application
@@ -47,9 +48,9 @@ module.exports = class Startup {
    * @param {string} port 
    * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage
    */
-  async boot(routes, port, stateless) {
-    console.log('[' + Timestamp() + '] Booting ' + ((stateless) ? 'stateless' : 'stateful') +  ' application')
-    await this.initApp(routes, stateless)
+  async boot(routes, port) {
+    console.log('[' + Timestamp() + '] Booting application')
+    await this.initApp(routes)
     this.start(port)
   }
 
@@ -58,18 +59,15 @@ module.exports = class Startup {
    * @param {object} routes
    * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage 
    */
-  async initApp(routes, stateless) {
+  async initApp(routes) {
     console.log('[' + Timestamp() + '] Initializing express js application')
     this.app = require('express')()
     this.setView('twig')
       .setParsers()
       .setLogger()
       .useSession()
-    if (!stateless) {
-      await this.useMongoDb()
-      this.useNodeCache()
-    }
-    this.setRoutes(routes, stateless)
+      .useRouteRepo()
+      .setRoutes(routes)
     return this
   }
 
@@ -180,30 +178,11 @@ module.exports = class Startup {
   }
 
   /**
-   * Setup mongodb repository
+   * Setup route repository
    */
-  async useMongoDb() {
-    console.log('[' + Timestamp() + '] Setting express js to use mongo db')
-    const client = require('mongodb').MongoClient,
-      connectionString = process.env.MONGODB_CONNECTION_STRING || this.__config.mongodb.connectionString
-
-    var db = await client.connect(connectionString)
-    console.log('[' + Timestamp() + '] Successfully connected to mongo db at ' + connectionString)
-    this.__routeFactory.tryUseService('mongodb', db)
-
-    return this
-  }
-
-  /**
-   * Setup memory cache using node-cache
-   */
-  useNodeCache() {
-    const NodeCache = require('node-cache'),
-      memCache = new NodeCache({
-        stdTTL: this.__config.nodecache.ttl || 60 // seconds
-      })
-    this.__routeFactory.tryUseService('memorycache', memCache)
-
+  useRouteRepo() {
+    const routeRepo = new RouteRepository()
+    this.__routeFactory.tryUseService('routeRepository', routeRepo)
     return this
   }
 
@@ -212,31 +191,29 @@ module.exports = class Startup {
    * @param {object} routes 
    * @param {bool} stateless - Stateless mode means no UI, API, and persistence storage 
    */
-  setRoutes(routes, stateless) {
+  setRoutes(routes) {
     console.log('[' + Timestamp() + '] Setting express js routes')
     const globalErrorHandler = require('./middlewares/globalErrorHandler'),
       pageNotFoundHandler = require('./middlewares/pageNotFoundHandler')
 
-    if (!stateless) {
-      // Handle static file requests to public folder
-      this.app.use(
-        require('express')
-        .static(require('path')
-          .join(__dirname, 'public')
-        )
+    // Handle static file requests to public folder
+    this.app.use(
+      require('express')
+      .static(require('path')
+        .join(__dirname, 'public')
       )
+    )
 
-      // Setup app to use defined routes
-      for (let key in this.routes) {
-        let route = this.routes[key]
-        if (Array.isArray(route)) {
-          for (let key in route) {
-            var r = route[key]
-            this.__routeFactory.register(r.method, r.path, r.handler)
-          }
-        } else {
-          this.__routeFactory.register(route.method, route.path, route.handler)
+    // Setup app to use defined routes
+    for (let key in this.routes) {
+      let route = this.routes[key]
+      if (Array.isArray(route)) {
+        for (let key in route) {
+          var r = route[key]
+          this.__routeFactory.register(r.method, r.path, r.handler)
         }
+      } else {
+        this.__routeFactory.register(route.method, route.path, route.handler)
       }
     }
 
