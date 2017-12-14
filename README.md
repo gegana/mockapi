@@ -9,20 +9,16 @@ Has an external dependency to a mongo database.
 # Running in Docker
 Runs in port 3000 by default.
 ```shell
-docker run --name supermockapi -p 3000:3000 dsumiskum/supermockapi
+docker run -d --name supermockapi -p 80:3000 dsumiskum/supermockapi
 ```
 Configure a different port.
 ```shell
-docker run --name supermockapi -p 3000:5000 -e "PORT:5000" dsumiskum/supermockapi
-```
-Configure mongo connection string. By default it will connect to mongodb://localhost:27017.
-```shell
-docker run --name supermockapi -p 3000:3000 -e "MONGODB_CONNECTION_STRING:mongodb://mymongo:8081" dsumiskum/supermockapi
+docker run -d --name supermockapi -p 80:5000 -e "PORT:5000" dsumiskum/supermockapi
 ```
 Specify initial mocked api routes specification through volume mapping a folder with a `routes.json` or the file itself to the container workdir (app is the workdir).
 The application will look for a routes.json file in the workdir when booting up.
 ```shell
-docker run --name supermockapi -p 3000:3000 -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
+docker run -d --name supermockapi -p 3000:3000 -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
 ```
 Route specifications format (routes.json):
 ```json
@@ -43,11 +39,7 @@ Route specifications format (routes.json):
   }
 ]
 ```
-If you only plan to use the mock api endpoints defined in your routes.json and nothing else, run the application in stateless mode to
-disable UI and storage features.
-```shell
-docker run --name supermockapi -p 3000:3000 -e "STATELESS=true" -v "${pwd}/folder/routes.json:/app/routes.json" dsumiskum/supermockapi
-```
+
 # Features
 supermockapi is meant to be lightweight, easy to deploy, and works for your Continous Integration needs. A big problem with performance testing 
 services is isolating the external dependencies to get more predictable metrics, which would be useful if you are benchmarking your metrics
