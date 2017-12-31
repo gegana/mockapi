@@ -4,7 +4,6 @@
 [![npm version](https://badge.fury.io/js/supermockapi.svg)](https://badge.fury.io/js/supermockapi)
 
 A lightweight, user-friendly, and powerful tool for mocking API endpoints. Useful for testing API client integrations, or performance testing your application without sending traffic to your API dependencies.
-Has an external dependency to a mongo database.
 
 # Running in Docker
 Runs in port 3000 by default.
@@ -150,7 +149,7 @@ Built using express js, the mock api endpoints have 3 priority levels:
 2. Routes you inject via routes.json
 3. Routes added dynamically via the API (/mockapi/route) that the UI uses
 
-The routes.json configurations are in memory, while the routes added dynamically via the UI are stored in mongodb.
+All routes are stored in memory.
 When you create routes.json file, make sure to include the required fields: path, method, and status.
 
 # Contributing
